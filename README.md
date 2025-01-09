@@ -1,36 +1,59 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Introduction
 
-## Getting Started
+Welcome to the Graph Task Generator project! This application is designed to help users generate graph-related tasks dynamically. The project is built using modern web technologies to ensure a smooth and efficient user experience. This project aims to provide an educational tool for teaching, learning and practicing graph algorithms through dynamically generated tasks.
 
-First, run the development server:
+## Key Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- **Task Types**: Supports multiple task types including Depth-First Search, Breadth-First Search, and Topological Sorting.
+- **Dynamic Task Generation**: Allows users to select a task type and generate tasks based on the selected attributes.
+- **PDF Export**: Enables users to download generated tasks and their solutions in PDF format.
+- **User-Friendly Interface**: Provides an intuitive and responsive interface for easy navigation and task generation.
+
+# For Developers
+
+## Technologies Used
+
+- **React**: A JavaScript library for building user interfaces.
+- **Next.js**: A React framework that enables server-side rendering and static site generation.
+- **TypeScript**: A typed superset of JavaScript that helps catch errors early and improve code quality.
+- **Mantine**: A React component library that provides a set of accessible and customizable UI components.
+- **PDF-Lib**: A library for creating and modifying PDF documents in JavaScript.
+- **CSS Modules**: A CSS file in which all class and animation names are scoped locally by default.
+
+## Project Structure
+
+The project has the following structure:
+
+```
+.gitignore
+.next/
+.vscode/
+package.json
+postcss.config.cjs
+public/
+README.md
+src/
+tsconfig.json
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository
+2. Install dependencies (**npm install**)
+3. Create a [.env](vscode-file://vscode-app/c:/Users/Benj%C3%A1min/AppData/Local/Programs/Microsoft%20VS%20Code%20Insiders/resources/app/out/vs/code/electron-sandbox/workbench/workbench.html) file in the root directory and add any necessary environment variables.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+* `npm run dev`: Start the development server using `ts-node`.
+* `npm run build`: Compile the TypeScript code to JavaScript.
+* `npm start`: Start the compiled server.
 
-To learn more about Next.js, take a look at the following resources:
+# Other
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is licensed under the the Apache License. See the LICENSE file for details.
 
-## Deploy on Vercel
+## Author
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is maintained by Benjámin Bartha-Tóth as part of his MA thesis work at ELTE Eötvös Lorán University (Hungary).
