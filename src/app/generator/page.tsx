@@ -25,6 +25,7 @@ import { useState } from "react";
 type FormValues = {
   graphNodes: number | null;
   graphEdges: number | null;
+  connectedGraph: boolean;
   taskTitle: string;
   taskText: string;
   dateChecked: boolean;
@@ -39,6 +40,7 @@ export default function Page() {
     initialValues: {
       graphNodes: null,
       graphEdges: null,
+      connectedGraph: true,
       taskTitle: "",
       taskText: "",
       dateChecked: false,
@@ -66,7 +68,7 @@ export default function Page() {
         ...formData,
       };
   
-      console.log("Adatcsomag küldése a backend felé:", dataToSend);
+      console.log("Adatok küldése a backend felé:", dataToSend);
   
       try {
         const response = await fetch("http://localhost:8000/api/generate-task", {
@@ -74,22 +76,33 @@ export default function Page() {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(dataToSend), // Convert data to JSON
+          body: JSON.stringify(dataToSend),
         });
   
         if (!response.ok) {
-          throw new Error(`Hiba történt: ${response.status}`);
+          throw new Error(`An error occurred: ${response.status}`);
         }
   
-        const responseData = await response.json();
-        console.log("Sikeres válasz a backendről:", responseData);
+        const pdfBlob = await response.blob();
+  
+        // A PDF fájl letöltése
+        const downloadLink = document.createElement("a");
+        downloadLink.href = URL.createObjectURL(pdfBlob);
+        downloadLink.download = `${formData.taskTitle.replace(/\s/g, "_")}.pdf`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+  
+        console.log("PDF fájl sikeresen letöltve.");
       } catch (error) {
-        console.error("Hiba történt az adatküldés közben:", error);
+        console.error("Hiba az adatok küldése vagy a PDF letöltése közben:", error);
       }
     } else {
       console.log("Érvénytelen kitöltés!");
     }
   };
+  
+  
 
   const renderTaskComponent = () => {
     switch (selectedTask) {

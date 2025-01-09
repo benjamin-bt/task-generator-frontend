@@ -14,6 +14,7 @@ import { rem } from "@mantine/core";
 type FormValues = {
   graphNodes: number | null;
   graphEdges: number | null;
+  connectedGraph: boolean;
   taskTitle: string;
   taskText: string;
   dateChecked: boolean;
@@ -53,6 +54,13 @@ export default function TopologikusRendezes({
         max={10}
         withAsterisk
         {...form.getInputProps("graphEdges")}
+      />
+      <Space h="sm" />
+      <Checkbox
+        label="Összefüggő gráf"
+        description="Jelöld be, ha az elkészítendő gráf összefüggő"
+        {...form.getInputProps("connectedGraph")}
+        disabled
       />
       <Space h="sm" />
       <TextInput
