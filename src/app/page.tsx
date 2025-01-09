@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Button,
   Container,
@@ -22,6 +22,16 @@ import styles from "./components/buttons.module.css";
 export default function About() {
 
   const router = useRouter();
+  const [message, setMessage] = useState('');
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/message')
+        .then((response) => response.json())
+        .then((data) => setMessage(data.message))
+        .catch((error) => console.error('Error:', error));
+}, []);
+
+  console.log(message);
 
   return (
     <>

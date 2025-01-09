@@ -56,18 +56,36 @@ export default function Page() {
     },
   });
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     form.validate();
-
+  
     if (form.isValid()) {
       const formData = form.values;
       const dataToSend = {
         taskType: selectedTask,
         ...formData,
       };
-      
+  
       console.log("Adatcsomag küldése a backend felé:", dataToSend);
-      
+  
+      try {
+        const response = await fetch("http://localhost:8000/api/generate-task", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSend), // Convert data to JSON
+        });
+  
+        if (!response.ok) {
+          throw new Error(`Hiba történt: ${response.status}`);
+        }
+  
+        const responseData = await response.json();
+        console.log("Sikeres válasz a backendről:", responseData);
+      } catch (error) {
+        console.error("Hiba történt az adatküldés közben:", error);
+      }
     } else {
       console.log("Érvénytelen kitöltés!");
     }
