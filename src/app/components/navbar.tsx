@@ -73,7 +73,7 @@ export default function NavBar() {
               >
                 GENERÁTOR
               </Button>
-              <Button
+              {/* <Button
                 className={styles.button}
                 variant="subtle"
                 radius="xs"
@@ -81,7 +81,7 @@ export default function NavBar() {
                 onClick={() => router.push("/about")}
               >
                 RÓLAM
-              </Button>
+              </Button> */}
             </Group>
           </Group>
 

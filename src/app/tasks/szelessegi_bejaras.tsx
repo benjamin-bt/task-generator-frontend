@@ -53,21 +53,29 @@ export default function SzelessegiBejaras({ form }: SzelessegiBejarasProps) {
         {...form.getInputProps("graphNodes")}
       />
       <Space h="sm" />
-      <NumberInput
-        label="Gráf éleinek száma"
-        description="Add meg a gráf éleinek számát"
-        placeholder="Adj meg egy számot"
-        min={2}
-        max={10}
-        withAsterisk
-        {...form.getInputProps("graphEdges")}
-      />
-      <Space h="sm" />
       <Checkbox
         label="Összefüggő gráf"
         description="Jelöld be, ha az elkészítendő gráf összefüggő"
         {...form.getInputProps("connectedGraph")}
+        checked
         disabled
+      />
+      <Space h="sm" />
+      <NumberInput
+        label="Gráf éleinek száma"
+        description="Add meg a gráf éleinek számát"
+        placeholder="Adj meg egy számot"
+        min={
+          form.values.graphNodes ? form.values.graphNodes - 1 : 1
+        }
+        max={
+          form.values.graphNodes
+            ? form.values.graphNodes * (form.values.graphNodes - 1) / 2
+            : 10
+        }
+        withAsterisk
+        {...form.getInputProps("graphEdges")}
+        error={form.errors.graphEdges}
       />
       <Space h="sm" />
       <TextInput

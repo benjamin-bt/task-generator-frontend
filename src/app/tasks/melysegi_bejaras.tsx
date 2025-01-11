@@ -54,6 +54,14 @@ export default function MelysegiBejaras({ form }: MelysegiBejarasProps) {
         error={form.errors.graphNodes}
       />
       <Space h="sm" />
+      <Checkbox
+        label="Összefüggő gráf"
+        description="Jelöld be, ha az elkészítendő gráf összefüggő"
+        {...form.getInputProps("connectedGraph")}
+        checked
+        disabled
+      />
+      <Space h="sm" />
       <NumberInput
         label="Gráf éleinek száma"
         description="Add meg a gráf éleinek számát"
@@ -69,14 +77,6 @@ export default function MelysegiBejaras({ form }: MelysegiBejarasProps) {
         withAsterisk
         {...form.getInputProps("graphEdges")}
         error={form.errors.graphEdges}
-      />
-      <Space h="sm" />
-      <Checkbox
-        label="Összefüggő gráf"
-        description="Jelöld be, ha az elkészítendő gráf összefüggő"
-        {...form.getInputProps("connectedGraph")}
-        checked
-        disabled
       />
       <Space h="sm" />
       <TextInput

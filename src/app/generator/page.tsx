@@ -1,26 +1,21 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import {
   Button,
   Container,
+  Flex,
   Group,
-  NumberInput,
   Paper,
-  Select,
   Space,
-  Text,
+  Stepper,
   Title,
-  Tooltip,
+  Text,
 } from "@mantine/core";
-
 import NavBar from "../components/navbar";
-
-import TopologikusRendezes from "../tasks/topologikus_rendezes";
-import MelysegiBejaras from "../tasks/melysegi_bejaras";
-import SzelessegiBejaras from "../tasks/szelessegi_bejaras";
-
+import SvgSetup from "./svgSetup";
+import PdfSetup from "./pdfSetup";
 import { useForm } from "@mantine/form";
-import { useState } from "react";
 
 type FormValues = {
   graphNodes: number | null;
@@ -33,87 +28,132 @@ type FormValues = {
 };
 
 export default function Page() {
-  const taskTypes = ["szélességi bejárás", "mélységi bejárás", "topologikus rendezés"];
   const [selectedTask, setSelectedTask] = useState("");
+  const [activeStep, setActiveStep] = useState(0);
+  const [svgGenerated, setSvgGenerated] = useState(false);
+  const [svgBlob, setSvgBlob] = useState<Blob | null>(null);
 
-  const form = useForm({
+  const svgForm = useForm({
     initialValues: {
       graphNodes: null,
       graphEdges: null,
       connectedGraph: true,
+    },
+    validate: {
+      graphNodes: (value) => (value ? null : "Gráf csúcsainak száma kötelező!"),
+      graphEdges: (value) => (value ? null : "Gráf éleinek száma kötelező!"),
+    },
+  });
+
+  const pdfForm = useForm({
+    initialValues: {
+      generatePdf: false,
       taskTitle: "",
       taskText: "",
       dateChecked: false,
       date: null,
     },
-
     validate: {
-      graphNodes: (value) => (value ? null : "Gráf csúcsainak száma kötelező!"),
-      graphEdges: (value) => (value ? null : "Gráf éleinek száma kötelező!"),
       taskTitle: (value) => (value ? null : "Feladat cím megadása kötelező!"),
       taskText: (value) => (value ? null : "Feladat szöveg megadása kötelező!"),
-      date: (value) => (form.values.dateChecked && !value ? "Dátum megadása kötelező!" : null),
-
-      
+      date: (value) =>
+        pdfForm.values.dateChecked && !value
+          ? "Dátum megadása kötelező!"
+          : null,
     },
   });
 
-  const handleSubmit = async () => {
-    form.validate();
-  
-    if (form.isValid()) {
-      const formData = form.values;
-      const dataToSend = {
+  useEffect(() => {
+    if (activeStep === 0 && svgGenerated && svgBlob) {
+      const canvas = document.getElementById(
+        "generatedCanvas"
+      ) as HTMLCanvasElement;
+
+      if (canvas) {
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+          const img = new Image();
+          const svgUrl = URL.createObjectURL(svgBlob);
+
+          img.onload = () => {
+            const scale = 0.5;
+            const width = img.width * scale;
+            const height = img.height * scale;
+
+            canvas.width = width;
+            canvas.height = height;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, width, height);
+          };
+
+          img.src = svgUrl;
+        }
+      }
+    }
+  }, [activeStep, svgGenerated, svgBlob]);
+
+  const handleSvgSubmit = async () => {
+    console.log("Selected Task:", selectedTask);
+    svgForm.validate();
+
+    if (svgForm.isValid()) {
+      const formData = svgForm.values;
+      const svgDataToSend = {
         taskType: selectedTask,
         ...formData,
       };
-  
-      console.log("Adatok küldése a backend felé:", dataToSend);
-  
+
       try {
-        const response = await fetch("http://localhost:8000/api/generate-task", {
+        const response = await fetch("http://localhost:8000/api/generate-svg", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(dataToSend),
+          body: JSON.stringify(svgDataToSend),
         });
-  
-        if (!response.ok) {
-          throw new Error(`An error occurred: ${response.status}`);
-        }
-  
+
+        if (!response.ok) throw new Error(`Error: ${response.status}`);
+
+        const svgBlob = await response.blob();
+        setSvgBlob(svgBlob);
+        setSvgGenerated(true);
+      } catch (error) {
+        console.error("Hiba az SVG generálása közben:", error);
+      }
+    }
+  };
+
+  const handlePdfSubmit = async () => {
+    pdfForm.validate();
+
+    if (pdfForm.isValid()) {
+      const formData = pdfForm.values;
+      const pdfDataToSend = {
+        taskType: selectedTask,
+        ...formData,
+      };
+
+      try {
+        const response = await fetch("http://localhost:8000/api/generate-pdf", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(pdfDataToSend),
+        });
+
+        if (!response.ok) throw new Error(`Error: ${response.status}`);
+
         const pdfBlob = await response.blob();
-  
-        // A PDF fájl letöltése
         const downloadLink = document.createElement("a");
         downloadLink.href = URL.createObjectURL(pdfBlob);
         downloadLink.download = `${formData.taskTitle.replace(/\s/g, "_")}.pdf`;
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
-  
-        console.log("PDF fájl sikeresen letöltve.");
       } catch (error) {
-        console.error("Hiba az adatok küldése vagy a PDF letöltése közben:", error);
+        console.error("Hiba a PDF generálása közben:", error);
       }
-    } else {
-      console.log("Érvénytelen kitöltés!");
-    }
-  };
-  
-  
-
-  const renderTaskComponent = () => {
-    switch (selectedTask) {
-      case "szélességi bejárás":
-        return <SzelessegiBejaras form={form} />;
-      case "mélységi bejárás":
-        return <MelysegiBejaras form={form} />;
-      case "topologikus rendezés":
-        return <TopologikusRendezes form={form} />;
-      default:
-        return null;
     }
   };
 
@@ -125,24 +165,105 @@ export default function Page() {
         <Paper shadow="lg" radius="lg" p="md" withBorder>
           <Title>Gráf feladat generátor</Title>
           <Space h="sm" />
-          <Select
-            label="Feladattípus"
-            description="Válassz feladattípust"
-            data={taskTypes}
-            placeholder="Válassz feladattípust"
-            value={selectedTask}
-            onChange={(value) => setSelectedTask(value || "")}
-            clearable
-          />
-          <Space h="xs" />
-          {renderTaskComponent()}
-          <Space h="lg" />
-          <Tooltip label="Erre kattintva elindul a feladat generálása a megadott attribútumok szerint." position="right" withArrow>
-            <Button color="#40798c" onClick={handleSubmit}>
-              Feladat generálása
-            </Button>
-          </Tooltip>
+
+          <Stepper
+            active={activeStep}
+            onStepClick={setActiveStep}
+            allowNextStepsSelect={false}
+          >
+            <Stepper.Step
+              label="SVG generálás"
+              description="Gráf SVG generálása"
+              allowStepSelect={svgGenerated}
+            >
+              <SvgSetup form={svgForm} selectedTask={selectedTask} setSelectedTask={setSelectedTask} />
+              <Group justify="center" align="center">
+                <Button onClick={handleSvgSubmit}>SVG generálása</Button>
+                <Button
+                  onClick={() => {
+                    if (svgBlob) {
+                      const downloadLink = document.createElement("a");
+                      downloadLink.href = URL.createObjectURL(svgBlob);
+                      downloadLink.download = "generated-graph.svg";
+                      document.body.appendChild(downloadLink);
+                      downloadLink.click();
+                      document.body.removeChild(downloadLink);
+                    }
+                  }}
+                  disabled={!svgGenerated || !svgBlob}
+                  variant="light"
+                  color="green"
+                >
+                  SVG Letöltése
+                </Button>
+                <Button
+                  onClick={() => setActiveStep(activeStep + 1)}
+                  disabled={!svgGenerated}
+                  variant="light"
+                  color="blue"
+                >
+                  Következő lépés
+                </Button>
+              </Group>
+              <Flex
+                justify="center"
+                align="center"
+                direction="column"
+                style={{
+                  width: "100%",
+                  height: "65vh",
+                }}
+              >
+                <Space h="sm" />
+                {svgGenerated && (
+                  <div
+                    id="svgContainer"
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100%",
+                      width: "100%",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <Text style={{ marginTop: "1rem", marginBottom: 0 }}>
+                      A generált gráf:
+                    </Text>
+                    <canvas
+                      id="generatedCanvas"
+                      style={{
+                        border: "1px solid black",
+                        display: svgGenerated ? "block" : "none",
+                        maxWidth: "100%",
+                        maxHeight: "100%",
+                        margin: "auto",
+                      }}
+                    ></canvas>
+                  </div>
+                )}
+              </Flex>
+            </Stepper.Step>
+
+            <Stepper.Step
+              label="PDF generálás"
+              description="Gráf PDF generálása"
+            >
+              <PdfSetup form={pdfForm} />
+              <Space h="sm" />
+              <Group justify="center">
+                <Button onClick={() => setActiveStep(activeStep - 1)}>
+                  Vissza
+                </Button>
+                <Button onClick={handlePdfSubmit} disabled={!svgGenerated}>
+                  PDF generálása
+                </Button>
+              </Group>
+            </Stepper.Step>
+          </Stepper>
         </Paper>
+        <Space h="md" />
       </Container>
     </>
   );
