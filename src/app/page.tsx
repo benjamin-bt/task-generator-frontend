@@ -55,7 +55,7 @@ export default function About() {
 
           <Space h="lg" />
           <Group justify="center" align="center">
-          <button className={styles.button54} role="button" onClick={() => router.push("/generator")} style={{ width: "50%" }}>Generálj feladatot</button>
+          <button className={styles.buttonMain} role="button" onClick={() => router.push("/generator")} style={{ width: "50%" }}>Generálj feladatot</button>
           </Group>
           <Space h="md" />
         </Paper>

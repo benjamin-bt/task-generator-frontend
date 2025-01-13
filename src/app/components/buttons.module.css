@@ -1,4 +1,4 @@
-.button54 {
+.buttonMain {
   font-family: "Open Sans", sans-serif;
   font-size: 16px;
   font-weight: bold;
@@ -17,19 +17,193 @@
   
 }
 
-.button54:active {
+.buttonMain:active {
   box-shadow: 0px 0px 0px 0px;
   top: 5px;
   left: 5px;
 }
 
-.button54:hover {
-  background-color: #d3d3d3; /* White-gray color */
-  color: black; /* Optional: Change text color on hover */
+.buttonMain:hover {
+  background-color: #d3d3d3;
+  color: black;
 }
 
 @media (min-width: 768px) {
-  .button54 {
+  .buttonMain {
     padding: 0.25em 0.75em;
   }
+}
+
+.buttonGenerate {
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  color: #000;
+  width: "20%";
+  cursor: pointer;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  
+}
+
+.buttonGenerate:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+.buttonGenerate:hover {
+  background-color: #d3d3d3;
+  color: black;
+}
+
+@media (min-width: 768px) {
+  .buttonGenerate {
+    padding: 0.25em 0.75em;
+  }
+}
+
+.buttonDownload {
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  background-color: #7daf4e;
+  color: #000;
+  width: "20%";
+  cursor: pointer;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  
+}
+
+.buttonDownloadDark{
+  background-color: #48642d;
+  color: #000;
+}
+
+.buttonDownload:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+.buttonDownload:hover {
+  background-color: #d3d3d3;
+  color: black;
+}
+
+@media (min-width: 768px) {
+  .buttonDownload {
+    padding: 0.25em 0.75em;
+  }
+}
+
+.buttonPrevStep {
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  background-color: #57b1db;
+  color: #000;
+  width: "20%";
+  cursor: pointer;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  
+}
+
+.buttonPrevStepDark {
+  background-color: #346379;
+  color: #000;
+}
+
+.buttonPrevStep:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+.buttonPrevStep:hover {
+  background-color: #d3d3d3;
+  color: black;
+}
+
+@media (min-width: 768px) {
+  .buttonPrevStep {
+    padding: 0.25em 0.75em;
+  }
+}
+
+.buttonNextStep {
+  font-family: "Open Sans", sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  background-color: #57b1db;
+  color: #000;
+  width: "20%";
+  cursor: pointer;
+  border: 3px solid;
+  padding: 0.25em 0.5em;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  position: relative;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  
+}
+
+.buttonNextStepDark {
+  background-color: #346379;
+  color: #000;
+}
+
+.buttonNextStep:active {
+  box-shadow: 0px 0px 0px 0px;
+  top: 5px;
+  left: 5px;
+}
+
+.buttonNextStep:hover {
+  background-color: #d3d3d3;
+  color: black;
+}
+
+@media (min-width: 768px) {
+  .buttonNextStep {
+    padding: 0.25em 0.75em;
+  }
+}
+
+.buttonDisabled {
+  background-color: grey;
+  color: black;
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.6;
 }
