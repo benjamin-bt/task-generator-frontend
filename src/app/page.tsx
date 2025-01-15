@@ -31,7 +31,7 @@ export default function About() {
         .catch((error) => console.error('Error:', error));
 }, []);
 
-  console.log(message);
+  /* console.log(message); */
 
   return (
     <>
