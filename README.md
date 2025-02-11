@@ -17,7 +17,6 @@ Welcome to the Graph Task Generator project! This application is designed to hel
 - **Next.js**: A React framework that enables server-side rendering and static site generation.
 - **TypeScript**: A typed superset of JavaScript that helps catch errors early and improve code quality.
 - **Mantine**: A React component library that provides a set of accessible and customizable UI components.
-- **PDF-Lib**: A library for creating and modifying PDF documents in JavaScript.
 - **CSS Modules**: A CSS file in which all class and animation names are scoped locally by default.
 
 ## Project Structure

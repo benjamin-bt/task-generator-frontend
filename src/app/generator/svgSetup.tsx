@@ -1,24 +1,11 @@
 import { useEffect, useState } from "react";
 import {
-  Button,
   Checkbox,
-  Container,
-  Group,
   NumberInput,
-  Paper,
   Select,
   Space,
-  Text,
-  Textarea,
-  TextInput,
-  Title,
-  Tooltip,
-  useMantineColorScheme,
 } from "@mantine/core";
-import { DateInput, DatePicker, DatesProvider } from "@mantine/dates";
 import "dayjs/locale/hu";
-import { rem } from "@mantine/core";
-import { IconCalendar } from "@tabler/icons-react";
 
 type FormValues = {
   taskTypes: string | null;
@@ -40,6 +27,11 @@ export default function SvgSetup({ form, selectedTask, setSelectedTask }: SvgPro
     "topologikus rendezés",
   ];
 
+  const graphTypes = [
+    "irányítatlan",
+    "irányított"
+  ];
+
   return (
     <>
       <Select
@@ -48,9 +40,27 @@ export default function SvgSetup({ form, selectedTask, setSelectedTask }: SvgPro
         data={taskTypes}
         placeholder="Válassz feladattípust"
         value={selectedTask}
-        onChange={(value) => setSelectedTask(value || "")}
+        onChange={(value) => {
+          setSelectedTask(value || "");
+          form.setFieldValue("selectedTask", value || "");
+        }}
+        error={form.errors.selectedTask}
         clearable
       />
+      <Space h="sm" />
+      <Select
+        label="Gráf típusa"
+        description="Válassz gráf típust"
+        data={graphTypes}
+        placeholder="Válassz gráf típust"
+        value={form.values.graphType}
+        onChange={(value) => {
+          form.setFieldValue("graphType", value || "");
+        }}
+        error={form.errors.graphType}
+        clearable
+      />
+      <Space h="sm" />
       <NumberInput
         label="Gráf csúcsainak száma"
         description="Add meg a gráf csúcsainak számát"
@@ -62,14 +72,14 @@ export default function SvgSetup({ form, selectedTask, setSelectedTask }: SvgPro
         error={form.errors.graphNodes}
       />
       <Space h="sm" />
-      <Checkbox
+      {/* <Checkbox
         label="Összefüggő gráf"
         description="Jelöld be, ha az elkészítendő gráf összefüggő"
         {...form.getInputProps("connectedGraph")}
         checked
         disabled
       />
-      <Space h="sm" />
+      <Space h="sm" /> */}
       <NumberInput
         label="Gráf éleinek száma"
         description="Add meg a gráf éleinek számát"

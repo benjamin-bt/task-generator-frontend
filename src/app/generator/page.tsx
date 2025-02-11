@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   Button,
   Container,
   Flex,
   Group,
+  LoadingOverlay,
   Paper,
   Space,
   Stepper,
@@ -21,6 +22,7 @@ import PdfSetup from "./pdfSetup";
 import { useForm } from "@mantine/form";
 
 import styles from "../components/buttons.module.css";
+import { DATES_PROVIDER_DEFAULT_SETTINGS } from "@mantine/dates";
 
 type FormValues = {
   graphNodes: number | null;
@@ -39,16 +41,30 @@ export default function Page() {
   const [svgBlob, setSvgBlob] = useState<Blob | null>(null);
   const [filename, setFilename] = useState<string | null>(null);
   const { colorScheme } = useMantineColorScheme();
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const svgForm = useForm({
     initialValues: {
+      graphType: "",
       graphNodes: null,
       graphEdges: null,
       connectedGraph: true,
+      selectedTask: "",
     },
     validate: {
+      graphType: (value) => (value ? null : "Gráf típusának kiválasztása kötelező!"),
       graphNodes: (value) => (value ? null : "Gráf csúcsainak száma kötelező!"),
       graphEdges: (value) => (value ? null : "Gráf éleinek száma kötelező!"),
+      selectedTask: (value, values) => {
+        if (!value) {
+          return "Feladattípus kiválasztása kötelező!";
+        }
+        if (values.graphType === "irányítatlan" && value === "topologikus rendezés") {
+          return "Topologikus rendezés csak irányított gráf esetén választható!";
+        }
+        return null;
+      },
     },
   });
 
@@ -73,18 +89,18 @@ export default function Page() {
   useEffect(() => {
     if (activeStep === 0 && svgGenerated && svgBlob) {
       const canvas = document.getElementById("generatedCanvas") as HTMLCanvasElement;
-  
+
       if (canvas) {
         const ctx = canvas.getContext("2d");
         if (ctx) {
           const img = new Image();
           const svgUrl = URL.createObjectURL(svgBlob);
-  
+
           img.onload = () => {
             const scale = 0.5;
             const width = img.width * scale;
             const height = img.height * scale;
-  
+
             canvas.width = width;
             canvas.height = height;
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -92,7 +108,7 @@ export default function Page() {
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, width, height);
           };
-  
+
           img.src = svgUrl;
         }
       }
@@ -100,16 +116,19 @@ export default function Page() {
   }, [activeStep, svgGenerated, svgBlob, colorScheme]);
 
   const handleSvgSubmit = async () => {
-    /* console.log("Selected Task:", selectedTask); */
+   /*  if (audioRef.current) {
+      audioRef.current.play();
+    } */
+    setLoading(true);
     svgForm.validate();
-
+  
     if (svgForm.isValid()) {
       const formData = svgForm.values;
       const svgDataToSend = {
         taskType: selectedTask,
         ...formData,
       };
-
+  
       try {
         const response = await fetch("http://localhost:8000/api/generate-svg", {
           method: "POST",
@@ -118,18 +137,23 @@ export default function Page() {
           },
           body: JSON.stringify(svgDataToSend),
         });
-
+  
         if (!response.ok) throw new Error(`Error: ${response.status}`);
-
+  
         const svgBlob = await response.blob();
         const filename = response.headers.get("X-Filename");
-        /* console.log("Received filename:", filename); */
+        const nodeList = response.headers.get("X-Node-List");
+        console.log(selectedTask + ": " + nodeList);
         setFilename(filename);
         setSvgBlob(svgBlob);
         setSvgGenerated(true);
       } catch (error) {
         console.error("Hiba az SVG generálása közben:", error);
+      } finally {
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   };
 
@@ -170,8 +194,9 @@ export default function Page() {
     }
   };
 
-/*   console.log("Filename:", filename);
-  console.log("Scheme:", colorScheme); */
+  useEffect(() => {
+    audioRef.current = new Audio("/key-press.mp3");
+  }, []);
 
   return (
     <>
@@ -197,61 +222,32 @@ export default function Page() {
                 setSelectedTask={setSelectedTask}
               />
               <Group justify="center" align="center">
-                {/* <Button onClick={handleSvgSubmit}>SVG generálása</Button> */}
-                {/* <Tooltip label="SVG generálása" position="bottom" offset={10} withArrow> */}
                 <button
                   className={styles.buttonGenerate}
                   role="button"
                   onClick={handleSvgSubmit}
+                  disabled={loading}
                 >
                   SVG generálása
                 </button>
-                {/* </Tooltip> */}
-                {/* <Button
-                  className={styles.button54}
-                  onClick={() => {
-                    if (svgBlob) {
-                      const downloadLink = document.createElement("a");
-                      downloadLink.href = URL.createObjectURL(svgBlob);
-                      downloadLink.download = filename || "graph.svg";
-                      document.body.appendChild(downloadLink);
-                      downloadLink.click();
-                      document.body.removeChild(downloadLink);
-                    }
-                  }}
-                  disabled={!svgGenerated || !svgBlob}
-                  
-                  color: "#557834"
-                >
-                  SVG Letöltése
-                </Button> */}
                 <Tooltip radius="xs" label="SVG letöltése" position="bottom" offset={10} withArrow>
-                <button
-                  className={`${styles.buttonDownload} ${!svgGenerated || !svgBlob ? styles.buttonDisabled : ''} ${colorScheme === "dark" ? styles.buttonDownloadDark : ''} `}
-                  onClick={() => {
-                    if (svgBlob) {
-                      const downloadLink = document.createElement("a");
-                      downloadLink.href = URL.createObjectURL(svgBlob);
-                      downloadLink.download = filename || "graph.svg";
-                      document.body.appendChild(downloadLink);
-                      downloadLink.click();
-                      document.body.removeChild(downloadLink);
-                    }
-                  }}
-                  disabled={!svgGenerated || !svgBlob}
-                >
-                  <IconDownload size={12} color='black'/>
-                </button>
+                  <button
+                    className={`${styles.buttonDownload} ${!svgGenerated || !svgBlob ? styles.buttonDisabled : ''} ${colorScheme === "dark" ? styles.buttonDownloadDark : ''} `}
+                    onClick={() => {
+                      if (svgBlob) {
+                        const downloadLink = document.createElement("a");
+                        downloadLink.href = URL.createObjectURL(svgBlob);
+                        downloadLink.download = filename || "graph.svg";
+                        document.body.appendChild(downloadLink);
+                        downloadLink.click();
+                        document.body.removeChild(downloadLink);
+                      }
+                    }}
+                    disabled={!svgGenerated || !svgBlob}
+                  >
+                    <IconDownload size={12} color='black'/>
+                  </button>
                 </Tooltip>
-                {/* <Button
-                  onClick={() => setActiveStep(activeStep + 1)}
-                  disabled={!svgGenerated}
-                  variant="light"
-                  color="blue"
-                >
-                  Következő lépés
-                </Button> */}
-                {/* <Tooltip label="Következő lépés" position="bottom" offset={10} withArrow> */}
                 <button
                   className={`${styles.buttonNextStep} ${!svgGenerated ? styles.buttonDisabled : ''} ${colorScheme === "dark" ? styles.buttonNextStepDark : ''}`}
                   onClick={() => setActiveStep(activeStep + 1)}
@@ -259,7 +255,6 @@ export default function Page() {
                 >
                   Következő lépés
                 </button>
-                {/* </Tooltip> */}
               </Group>
               <Flex
                 justify="center"
@@ -281,12 +276,11 @@ export default function Page() {
                       alignItems: "center",
                       height: "100%",
                       width: "100%",
+                      position: "relative",
                       overflow: "hidden",
                     }}
                   >
-                    {/* <Text style={{ marginTop: "20px", marginBottom: "20px" }}>
-                      A generált gráf:
-                    </Text> */}
+                    <LoadingOverlay visible={loading} />
                     <canvas
                       id="generatedCanvas"
                       style={{
@@ -294,7 +288,6 @@ export default function Page() {
                         display: svgGenerated ? "block" : "none",
                         maxWidth: "100%",
                         maxHeight: "100%",
-                        /* margin: "auto", */
                         marginTop: "40px",
                         marginBottom: "30px",
                       }}
@@ -311,15 +304,9 @@ export default function Page() {
               <PdfSetup form={pdfForm} />
               <Space h="sm" />
               <Group justify="center">
-                {/* <Button onClick={() => setActiveStep(activeStep - 1)}>
-                  Vissza
-                </Button> */}
                 <button className={`${styles.buttonPrevStep} ${colorScheme === "dark" ? styles.buttonPrevStepDark : ''}`} onClick={() => setActiveStep(activeStep - 1)}>
                   Vissza
                 </button>
-                {/* <Button onClick={handlePdfSubmit} disabled={!svgGenerated}>
-                  PDF generálása
-                </Button> */}
                 <button className={styles.buttonGenerate} onClick={handlePdfSubmit} disabled={!svgGenerated}>
                   PDF generálása
                 </button>

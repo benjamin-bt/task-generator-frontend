@@ -3,11 +3,8 @@ import {
   Checkbox,
   Space,
   TextInput,
-  Title,
-  Tooltip,
-  useMantineColorScheme,
 } from "@mantine/core";
-import { DateInput, DatePicker, DatesProvider } from "@mantine/dates";
+import { DateInput } from "@mantine/dates";
 import "dayjs/locale/hu";
 import { rem } from "@mantine/core";
 import { IconCalendar } from "@tabler/icons-react";
