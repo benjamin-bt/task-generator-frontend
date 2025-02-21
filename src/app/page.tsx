@@ -25,7 +25,7 @@ export default function About() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/message')
+    fetch(/* 'http://localhost:8000/api/message' */ "https://graph-task-generator.onrender.com/api/message")
         .then((response) => response.json())
         .then((data) => setMessage(data.message))
         .catch((error) => console.error('Error:', error));
