@@ -136,7 +136,7 @@ export default function Page() {
       };
 
       try {
-        const response = await fetch(/* "http://localhost:8000/api/generate-svg" */ "https://graph-task-generator.onrender.com/api/generate-svg", {
+        const response = await fetch(/* "http://localhost:8000/api/generate-svg" */ "https://15e0-188-6-208-192.ngrok-free.app/api/generate-svg", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -175,7 +175,7 @@ export default function Page() {
       };
 
       try {
-        const response = await fetch(/* "http://localhost:8000/api/generate-pdf" */ "https://graph-task-generator.onrender.com/api/generate-pdf", {
+        const response = await fetch(/* "http://localhost:8000/api/generate-pdf" */ "https://15e0-188-6-208-192.ngrok-free.app/api/generate-pdf", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
