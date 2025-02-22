@@ -138,7 +138,7 @@ export default function Page() {
       };
 
       try {
-        const response = await fetch(/* "http://localhost:8000/api/generate-svg" */ `${process.env.REACT_APP_BACKEND}/api/generate-svg`, {
+        const response = await fetch(/* "http://localhost:8000/api/generate-svg" */ "https://053b-188-6-208-192.ngrok-free.app/api/generate-svg", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -178,7 +178,7 @@ export default function Page() {
       };
 
       try {
-        const response = await fetch(/* "http://localhost:8000/api/generate-pdf" */ `${process.env.REACT_APP_BACKEND}/api/generate-pdf`, {
+        const response = await fetch(/* "http://localhost:8000/api/generate-pdf" */ "https://053b-188-6-208-192.ngrok-free.app/api/generate-pdf", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
