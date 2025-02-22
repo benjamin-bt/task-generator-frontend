@@ -20,6 +20,8 @@ import NavBar from "../components/navbar";
 import SvgSetup from "./svgSetup";
 import PdfSetup from "./pdfSetup";
 import { useForm } from "@mantine/form";
+import dotenv from "dotenv";
+dotenv.config();
 
 import styles from "../components/buttons.module.css";
 import { DATES_PROVIDER_DEFAULT_SETTINGS } from "@mantine/dates";
@@ -136,7 +138,7 @@ export default function Page() {
       };
 
       try {
-        const response = await fetch(/* "http://localhost:8000/api/generate-svg" */ "https://15e0-188-6-208-192.ngrok-free.app/api/generate-svg", {
+        const response = await fetch(/* "http://localhost:8000/api/generate-svg" */ `${process.env.REACT_APP_BACKEND}/api/generate-svg`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -176,7 +178,7 @@ export default function Page() {
       };
 
       try {
-        const response = await fetch(/* "http://localhost:8000/api/generate-pdf" */ "https://15e0-188-6-208-192.ngrok-free.app/api/generate-pdf", {
+        const response = await fetch(/* "http://localhost:8000/api/generate-pdf" */ `${process.env.REACT_APP_BACKEND}/api/generate-pdf`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
