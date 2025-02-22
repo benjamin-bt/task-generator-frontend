@@ -51,22 +51,18 @@ export default function Page() {
       graphType: "",
       graphNodes: null,
       graphEdges: null,
-      acyclicGraph: false,
+      connectedGraph: true,
       selectedTask: "",
     },
     validate: {
-      graphType: (value) =>
-        value ? null : "Gráf típusának kiválasztása kötelező!",
+      graphType: (value) => (value ? null : "Gráf típusának kiválasztása kötelező!"),
       graphNodes: (value) => (value ? null : "Gráf csúcsainak száma kötelező!"),
       graphEdges: (value) => (value ? null : "Gráf éleinek száma kötelező!"),
       selectedTask: (value, values) => {
         if (!value) {
           return "Feladattípus kiválasztása kötelező!";
         }
-        if (
-          values.graphType === "irányítatlan" &&
-          value === "topologikus rendezés"
-        ) {
+        if (values.graphType === "irányítatlan" && value === "topologikus rendezés") {
           return "Topologikus rendezés csak irányított gráf esetén választható!";
         }
         return null;
@@ -94,9 +90,7 @@ export default function Page() {
 
   useEffect(() => {
     if (activeStep === 0 && svgGenerated && svgBlob) {
-      const canvas = document.getElementById(
-        "generatedCanvas"
-      ) as HTMLCanvasElement;
+      const canvas = document.getElementById("generatedCanvas") as HTMLCanvasElement;
 
       if (canvas) {
         const ctx = canvas.getContext("2d");
@@ -124,19 +118,19 @@ export default function Page() {
   }, [activeStep, svgGenerated, svgBlob, colorScheme]);
 
   const handleSvgSubmit = async () => {
-    /*  if (audioRef.current) {
+   /*  if (audioRef.current) {
       audioRef.current.play();
     } */
     setLoading(true);
     svgForm.validate();
-
+  
     if (svgForm.isValid()) {
       const formData = svgForm.values;
       const svgDataToSend = {
         taskType: selectedTask,
         ...formData,
       };
-
+  
       try {
         const response = await fetch(/* "http://localhost:8000/api/generate-svg" */ "https://053b-188-6-208-192.ngrok-free.app/api/generate-svg", {
           method: "POST",
@@ -146,9 +140,9 @@ export default function Page() {
           body: JSON.stringify(svgDataToSend),
           mode: "no-cors",
         });
-
+  
         if (!response.ok) throw new Error(`Error: ${response.status}`);
-
+  
         const svgBlob = await response.blob();
         const filename = response.headers.get("X-Filename");
         const nodeList = response.headers.get("X-Node-List");
@@ -240,19 +234,9 @@ export default function Page() {
                 >
                   SVG generálása
                 </button>
-                <Tooltip
-                  radius="xs"
-                  label="SVG letöltése"
-                  position="bottom"
-                  offset={10}
-                  withArrow
-                >
+                <Tooltip radius="xs" label="SVG letöltése" position="bottom" offset={10} withArrow>
                   <button
-                    className={`${styles.buttonDownload} ${
-                      !svgGenerated || !svgBlob ? styles.buttonDisabled : ""
-                    } ${
-                      colorScheme === "dark" ? styles.buttonDownloadDark : ""
-                    } `}
+                    className={`${styles.buttonDownload} ${!svgGenerated || !svgBlob ? styles.buttonDisabled : ''} ${colorScheme === "dark" ? styles.buttonDownloadDark : ''} `}
                     onClick={() => {
                       if (svgBlob) {
                         const downloadLink = document.createElement("a");
@@ -265,13 +249,11 @@ export default function Page() {
                     }}
                     disabled={!svgGenerated || !svgBlob}
                   >
-                    <IconDownload size={12} color="black" />
+                    <IconDownload size={12} color='black'/>
                   </button>
                 </Tooltip>
                 <button
-                  className={`${styles.buttonNextStep} ${
-                    !svgGenerated ? styles.buttonDisabled : ""
-                  } ${colorScheme === "dark" ? styles.buttonNextStepDark : ""}`}
+                  className={`${styles.buttonNextStep} ${!svgGenerated ? styles.buttonDisabled : ''} ${colorScheme === "dark" ? styles.buttonNextStepDark : ''}`}
                   onClick={() => setActiveStep(activeStep + 1)}
                   disabled={!svgGenerated}
                 >
@@ -323,26 +305,13 @@ export default function Page() {
               label="PDF generálás"
               description="Gráf PDF generálása"
             >
-              <PdfSetup
-                form={pdfForm} /* 
-                selectedTask={selectedTask}
-                setSelectedTask={setSelectedTask} */
-              />
+              <PdfSetup form={pdfForm} />
               <Space h="sm" />
               <Group justify="center">
-                <button
-                  className={`${styles.buttonPrevStep} ${
-                    colorScheme === "dark" ? styles.buttonPrevStepDark : ""
-                  }`}
-                  onClick={() => setActiveStep(activeStep - 1)}
-                >
+                <button className={`${styles.buttonPrevStep} ${colorScheme === "dark" ? styles.buttonPrevStepDark : ''}`} onClick={() => setActiveStep(activeStep - 1)}>
                   Vissza
                 </button>
-                <button
-                  className={styles.buttonGenerate}
-                  onClick={handlePdfSubmit}
-                  disabled={!svgGenerated}
-                >
+                <button className={styles.buttonGenerate} onClick={handlePdfSubmit} disabled={!svgGenerated}>
                   PDF generálása
                 </button>
               </Group>
