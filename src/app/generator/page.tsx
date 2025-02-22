@@ -142,6 +142,7 @@ export default function Page() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(svgDataToSend),
+          mode: "no-cors",
         });
 
         if (!response.ok) throw new Error(`Error: ${response.status}`);
@@ -181,6 +182,7 @@ export default function Page() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify(pdfDataToSend),
+          mode: "no-cors",
         });
 
         if (!response.ok) throw new Error(`Error: ${response.status}`);
