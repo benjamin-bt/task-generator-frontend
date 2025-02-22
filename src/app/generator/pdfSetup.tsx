@@ -1,7 +1,10 @@
 import { useState } from "react";
 import {
   Checkbox,
+  Divider,
+  Select,
   Space,
+  Textarea,
   TextInput,
 } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
@@ -11,9 +14,11 @@ import { IconCalendar } from "@tabler/icons-react";
 
 type FormValues = {
   generatePdf: boolean;
+  graphType: string;
   graphNodes: number | null;
   graphEdges: number | null;
-  connectedGraph: boolean;
+  acyclicGraph: boolean;
+  taskTypes: string | null;
   taskTitle: string;
   taskText: string;
   dateChecked: boolean;
@@ -22,22 +27,46 @@ type FormValues = {
 
 interface PdfProps {
   form: any;
+  /* selectedTask: string;
+  setSelectedTask: React.Dispatch<React.SetStateAction<string>>; */
 }
 
-export default function PdfSetup({ form }: PdfProps) {
+export default function PdfSetup({
+  form /* , selectedTask, setSelectedTask */,
+}: PdfProps) {
+  /* const taskTypes = [
+    "szélességi bejárás",
+    "mélységi bejárás",
+    "topologikus rendezés",
+  ]; */
+
   const dateIcon = (
     <IconCalendar style={{ width: rem(18), height: rem(18) }} stroke={1.5} />
   );
 
   return (
     <>
+      {/* <Select
+            label="Feladattípus"
+            description="Válassz feladattípust"
+            data={taskTypes}
+            placeholder="Válassz feladattípust"
+            value={selectedTask}
+            onChange={(value) => {
+              setSelectedTask(value || "");
+              form.setFieldValue("selectedTask", value || "");
+            }}
+            error={form.errors.selectedTask}
+            clearable
+          /> */}
+      <Space h="sm" />
       <TextInput
         label="Feladat címe"
         placeholder="Add meg a feladat címét"
         {...form.getInputProps("taskTitle")}
       />
       <Space h="sm" />
-      <TextInput
+      <Textarea
         label="Feladat szövege"
         placeholder="Add meg a feladat szövegét"
         {...form.getInputProps("taskText")}
@@ -60,6 +89,9 @@ export default function PdfSetup({ form }: PdfProps) {
           {...form.getInputProps("date")}
         />
       )}
+      <Space h="md" />
+      <Divider />
+      <Space h="xs" />
     </>
   );
 }
