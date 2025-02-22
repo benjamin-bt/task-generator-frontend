@@ -25,7 +25,7 @@ export default function About() {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
-    fetch(/* 'http://localhost:8000/api/message' */ "https://15e0-188-6-208-192.ngrok-free.app/api/message")
+    fetch(/* 'http://localhost:8000/api/message' */ `${process.env.REACT_APP_BACKEND}/api/message`)
         .then((response) => response.json())
         .then((data) => setMessage(data.message))
         .catch((error) => console.error('Error:', error));
