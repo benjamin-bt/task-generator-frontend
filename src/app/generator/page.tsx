@@ -229,10 +229,11 @@ export default function Page() {
               />
               <Group justify="center" align="center">
                 <button
-                  className={styles.buttonGenerate}
+                  className={`${styles.buttonGenerate} ${
+                    loading && (!svgGenerated || !svgBlob) ? styles.buttonDisabled : ""
+                  } `}
                   role="button"
                   onClick={handleSvgSubmit}
-                  disabled={loading}
                 >
                   SVG generálása
                 </button>
@@ -274,6 +275,7 @@ export default function Page() {
                   Következő lépés
                 </button>
               </Group>
+              {/* TODO: hibaüzenetek megjelenítése: "Nem sikerült gráf képet generálni", "Nem sikerült PDF-et generálni" */}
               <Flex
                 justify="center"
                 align="center"
