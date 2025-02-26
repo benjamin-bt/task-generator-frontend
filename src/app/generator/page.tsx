@@ -47,6 +47,7 @@ export default function Page() {
   const [solutionPdfPath, setSolutionPdfPath] = useState<string | null>(null);
   const { colorScheme } = useMantineColorScheme();
   const [loading, setLoading] = useState(false);
+  const [pdfLoading, setPdfLoading] = useState(false);
   const [nodeListBack, setNodeListBack] = useState([]);
 
   const svgForm = useForm({
@@ -144,7 +145,6 @@ export default function Page() {
       console.log("Backend URL:", process.env.NEXT_PUBLIC_BACKEND);
 
       try {
-        /* const response = await fetch("http://localhost:8000/api/generate-svg", { */
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND}/api/generate-svg`,
           {
@@ -183,7 +183,7 @@ export default function Page() {
   const handlePdfSubmit = async () => {
     setTaskPdfPath(null);
     setSolutionPdfPath(null);
-    setLoading(true);
+    setPdfLoading(true);
     pdfForm.validate();
 
     if (pdfForm.isValid()) {
@@ -197,7 +197,6 @@ export default function Page() {
       };
 
       try {
-        /* const response = await fetch("http://localhost:8000/api/generate-pdf", { */
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND}/api/generate-pdf`,
           {
@@ -214,54 +213,16 @@ export default function Page() {
         const result = await response.json();
         setTaskPdfPath(result.taskPdf);
         setSolutionPdfPath(result.solutionPdf);
-        /* console.log("PDF generálás eredménye:", result); */
         setPdfGenerated(true);
       } catch (error) {
         console.error("Hiba a PDF generálása közben:", error);
       } finally {
-        setLoading(false);
+        setPdfLoading(false);
       }
     } else {
-      setLoading(false);
+      setPdfLoading(false);
     }
   };
-
-  /* const handlePdfSubmit = async () => {
-    pdfForm.validate();
-
-    if (pdfForm.isValid()) {
-      const formData = pdfForm.values;
-      const pdfDataToSend = {
-        taskType: selectedTask,
-        ...formData,
-        svgFilename: filename,
-      };
-
-      try {
-        const response = await fetch("http://localhost:8000/api/generate-pdf", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(pdfDataToSend),
-        });
-
-        if (!response.ok) throw new Error(`Error: ${response.status}`);
-
-        const pdfBlob = await response.blob();
-        const downloadLink = document.createElement("a");
-        downloadLink.href = URL.createObjectURL(pdfBlob);
-        downloadLink.download = filename
-          ? filename.replace(".svg", ".pdf")
-          : "generated.pdf";
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-      } catch (error) {
-        console.error("Hiba a PDF generálása közben:", error);
-      }
-    }
-  }; */
 
   return (
     <>
@@ -296,7 +257,7 @@ export default function Page() {
                   role="button"
                   onClick={handleSvgSubmit}
                 >
-                  SVG generálása
+                  {loading || pdfLoading ? "...generálás" : "SVG generálása"}
                 </button>
                 <Tooltip
                   radius="xs"
@@ -395,9 +356,9 @@ export default function Page() {
                 <button
                   className={styles.buttonGenerate}
                   onClick={handlePdfSubmit}
-                  disabled={!pdfGenerated || loading}
+                  disabled={pdfLoading}
                 >
-                  {loading ? "...generálás" : "PDF generálása"}
+                  {pdfLoading ? "...generálás" : "PDF generálása"}
                 </button>
               </Group>
               {taskPdfPath && solutionPdfPath && (
@@ -406,7 +367,6 @@ export default function Page() {
                     className={styles.buttonGenerate}
                     onClick={() => {
                       const downloadLink = document.createElement("a");
-                      /* downloadLink.href = `http://localhost:8000${taskPdfPath}`; */
                       downloadLink.href = `${process.env.NEXT_PUBLIC_BACKEND}${taskPdfPath}`;
                       downloadLink.download = "";
                       downloadLink.target = "_blank"; // Open in new tab
@@ -421,7 +381,6 @@ export default function Page() {
                     className={styles.buttonGenerate}
                     onClick={() => {
                       const downloadLink = document.createElement("a");
-                      /* downloadLink.href = `http://localhost:8000${solutionPdfPath}`; */
                       downloadLink.href = `${process.env.NEXT_PUBLIC_BACKEND}${solutionPdfPath}`;
                       downloadLink.download = "";
                       downloadLink.target = "_blank"; // Open in new tab
