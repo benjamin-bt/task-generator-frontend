@@ -24,7 +24,7 @@ import { useForm } from "@mantine/form";
 import styles from "../components/buttons.module.css";
 import { DATES_PROVIDER_DEFAULT_SETTINGS } from "@mantine/dates";
 
-require('dotenv').config();
+require("dotenv").config();
 
 type FormValues = {
   graphNodes: number | null;
@@ -40,6 +40,7 @@ export default function Page() {
   const [selectedTask, setSelectedTask] = useState("");
   const [activeStep, setActiveStep] = useState(0);
   const [svgGenerated, setSvgGenerated] = useState(false);
+  const [pdfGenerated, setPdfGenerated] = useState(false);
   const [svgBlob, setSvgBlob] = useState<Blob | null>(null);
   const [filename, setFilename] = useState<string | null>(null);
   const [taskPdfPath, setTaskPdfPath] = useState<string | null>(null);
@@ -140,17 +141,20 @@ export default function Page() {
         ...formData,
       };
 
-      console.log('Backend URL:', process.env.NEXT_PUBLIC_BACKEND);
+      console.log("Backend URL:", process.env.NEXT_PUBLIC_BACKEND);
 
       try {
         /* const response = await fetch("http://localhost:8000/api/generate-svg", { */
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/generate-svg`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(svgDataToSend),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND}/api/generate-svg`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(svgDataToSend),
+          }
+        );
 
         if (!response.ok) throw new Error(`Error: ${response.status}`);
 
@@ -177,6 +181,9 @@ export default function Page() {
   };
 
   const handlePdfSubmit = async () => {
+    setTaskPdfPath(null);
+    setSolutionPdfPath(null);
+    setLoading(true);
     pdfForm.validate();
 
     if (pdfForm.isValid()) {
@@ -191,23 +198,31 @@ export default function Page() {
 
       try {
         /* const response = await fetch("http://localhost:8000/api/generate-pdf", { */
-        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/generate-pdf`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(pdfDataToSend),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_BACKEND}/api/generate-pdf`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(pdfDataToSend),
+          }
+        );
 
         if (!response.ok) throw new Error(`Error: ${response.status}`);
 
         const result = await response.json();
         setTaskPdfPath(result.taskPdf);
         setSolutionPdfPath(result.solutionPdf);
-        console.log("PDF generálás eredménye:", result);
+        /* console.log("PDF generálás eredménye:", result); */
+        setPdfGenerated(true);
       } catch (error) {
         console.error("Hiba a PDF generálása közben:", error);
+      } finally {
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   };
 
@@ -380,9 +395,9 @@ export default function Page() {
                 <button
                   className={styles.buttonGenerate}
                   onClick={handlePdfSubmit}
-                  disabled={!svgGenerated}
+                  disabled={!pdfGenerated || loading}
                 >
-                  PDF generálása
+                  {loading ? "...generálás" : "PDF generálása"}
                 </button>
               </Group>
               {taskPdfPath && solutionPdfPath && (
