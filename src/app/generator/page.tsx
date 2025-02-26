@@ -73,6 +73,10 @@ export default function Page() {
         }
         return null;
       },
+      acyclicGraph: (value, values) =>
+        values.selectedTask === "topologikus rendezés" && !value
+          ? "Topologikus rendezéshez (irányított) aciklikus gráf szükséges!"
+          : null,
     },
   });
 
