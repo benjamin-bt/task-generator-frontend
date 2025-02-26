@@ -24,6 +24,8 @@ import { useForm } from "@mantine/form";
 import styles from "../components/buttons.module.css";
 import { DATES_PROVIDER_DEFAULT_SETTINGS } from "@mantine/dates";
 
+require('dotenv').config();
+
 type FormValues = {
   graphNodes: number | null;
   graphEdges: number | null;
@@ -40,9 +42,11 @@ export default function Page() {
   const [svgGenerated, setSvgGenerated] = useState(false);
   const [svgBlob, setSvgBlob] = useState<Blob | null>(null);
   const [filename, setFilename] = useState<string | null>(null);
+  const [taskPdfPath, setTaskPdfPath] = useState<string | null>(null);
+  const [solutionPdfPath, setSolutionPdfPath] = useState<string | null>(null);
   const { colorScheme } = useMantineColorScheme();
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [loading, setLoading] = useState(false);
+  const [nodeListBack, setNodeListBack] = useState([]);
 
   const svgForm = useForm({
     initialValues: {
@@ -122,9 +126,6 @@ export default function Page() {
   }, [activeStep, svgGenerated, svgBlob, colorScheme]);
 
   const handleSvgSubmit = async () => {
-    /*  if (audioRef.current) {
-      audioRef.current.play();
-    } */
     setLoading(true);
     svgForm.validate();
 
@@ -135,8 +136,11 @@ export default function Page() {
         ...formData,
       };
 
+      console.log('Backend URL:', process.env.NEXT_PUBLIC_BACKEND);
+
       try {
-        const response = await fetch("http://localhost:8000/api/generate-svg", {
+        /* const response = await fetch("http://localhost:8000/api/generate-svg", { */
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/generate-svg`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -149,10 +153,15 @@ export default function Page() {
         const svgBlob = await response.blob();
         const filename = response.headers.get("X-Filename");
         const nodeList = response.headers.get("X-Node-List");
-        console.log(selectedTask + ": " + nodeList);
+
+        setNodeListBack(nodeList ? JSON.parse(nodeList) : []);
+        console.log("Node list:", nodeList);
+        console.log("Node list back:", nodeListBack);
         setFilename(filename);
         setSvgBlob(svgBlob);
         setSvgGenerated(true);
+        setTaskPdfPath(null);
+        setSolutionPdfPath(null);
       } catch (error) {
         console.error("Hiba az SVG generálása közben:", error);
       } finally {
@@ -164,6 +173,41 @@ export default function Page() {
   };
 
   const handlePdfSubmit = async () => {
+    pdfForm.validate();
+
+    if (pdfForm.isValid()) {
+      const formData = pdfForm.values;
+      const pdfDataToSend = {
+        taskType: selectedTask,
+        graphType: svgForm.values.graphType,
+        nodeListBack: nodeListBack.length > 0 ? nodeListBack : [],
+        ...formData,
+        svgFilename: filename,
+      };
+
+      try {
+        /* const response = await fetch("http://localhost:8000/api/generate-pdf", { */
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND}/api/generate-pdf`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(pdfDataToSend),
+        });
+
+        if (!response.ok) throw new Error(`Error: ${response.status}`);
+
+        const result = await response.json();
+        setTaskPdfPath(result.taskPdf);
+        setSolutionPdfPath(result.solutionPdf);
+        console.log("PDF generálás eredménye:", result);
+      } catch (error) {
+        console.error("Hiba a PDF generálása közben:", error);
+      }
+    }
+  };
+
+  /* const handlePdfSubmit = async () => {
     pdfForm.validate();
 
     if (pdfForm.isValid()) {
@@ -198,11 +242,7 @@ export default function Page() {
         console.error("Hiba a PDF generálása közben:", error);
       }
     }
-  };
-
-  useEffect(() => {
-    audioRef.current = new Audio("/key-press.mp3");
-  }, []);
+  }; */
 
   return (
     <>
@@ -230,7 +270,9 @@ export default function Page() {
               <Group justify="center" align="center">
                 <button
                   className={`${styles.buttonGenerate} ${
-                    loading && (!svgGenerated || !svgBlob) ? styles.buttonDisabled : ""
+                    loading && (!svgGenerated || !svgBlob)
+                      ? styles.buttonDisabled
+                      : ""
                   } `}
                   role="button"
                   onClick={handleSvgSubmit}
@@ -275,7 +317,6 @@ export default function Page() {
                   Következő lépés
                 </button>
               </Group>
-              {/* TODO: hibaüzenetek megjelenítése: "Nem sikerült gráf képet generálni", "Nem sikerült PDF-et generálni" */}
               <Flex
                 justify="center"
                 align="center"
@@ -321,11 +362,7 @@ export default function Page() {
               label="PDF generálás"
               description="Gráf PDF generálása"
             >
-              <PdfSetup
-                form={pdfForm} /* 
-                selectedTask={selectedTask}
-                setSelectedTask={setSelectedTask} */
-              />
+              <PdfSetup form={pdfForm} />
               <Space h="sm" />
               <Group justify="center">
                 <button
@@ -344,6 +381,40 @@ export default function Page() {
                   PDF generálása
                 </button>
               </Group>
+              {taskPdfPath && solutionPdfPath && (
+                <Group justify="center" align="center" mt="md">
+                  <button
+                    className={styles.buttonGenerate}
+                    onClick={() => {
+                      const downloadLink = document.createElement("a");
+                      /* downloadLink.href = `http://localhost:8000${taskPdfPath}`; */
+                      downloadLink.href = `${process.env.NEXT_PUBLIC_BACKEND}${taskPdfPath}`;
+                      downloadLink.download = "";
+                      downloadLink.target = "_blank"; // Open in new tab
+                      document.body.appendChild(downloadLink);
+                      downloadLink.click();
+                      document.body.removeChild(downloadLink);
+                    }}
+                  >
+                    Feladat PDF letöltése
+                  </button>
+                  <button
+                    className={styles.buttonGenerate}
+                    onClick={() => {
+                      const downloadLink = document.createElement("a");
+                      /* downloadLink.href = `http://localhost:8000${solutionPdfPath}`; */
+                      downloadLink.href = `${process.env.NEXT_PUBLIC_BACKEND}${solutionPdfPath}`;
+                      downloadLink.download = "";
+                      downloadLink.target = "_blank"; // Open in new tab
+                      document.body.appendChild(downloadLink);
+                      downloadLink.click();
+                      document.body.removeChild(downloadLink);
+                    }}
+                  >
+                    Megoldás PDF letöltése
+                  </button>
+                </Group>
+              )}
             </Stepper.Step>
           </Stepper>
         </Paper>
