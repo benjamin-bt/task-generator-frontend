@@ -64,12 +64,14 @@ export default function PdfSetup({
         label="Feladat címe"
         placeholder="Add meg a feladat címét"
         {...form.getInputProps("taskTitle")}
+        maxLength={120}
       />
       <Space h="sm" />
       <Textarea
         label="Feladat szövege"
         placeholder="Add meg a feladat szövegét"
         {...form.getInputProps("taskText")}
+        maxLength={1100}
       />
       <Space h="sm" />
       <Checkbox
