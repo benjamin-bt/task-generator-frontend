@@ -216,7 +216,6 @@ export default function Page() {
 
         const result = await response.json();
         setTaskPdfPath(result.taskPdf);
-        setPdfResult(result);
         setSolutionPdfPath(result.solutionPdf);
         setPdfGenerated(true);
       } catch (error) {
@@ -258,7 +257,7 @@ export default function Page() {
                     loading && (!svgGenerated || !svgBlob)
                       ? styles.buttonDisabled
                       : ""
-                  } ${colorScheme === "dark" ? styles.buttonGenerateDark : styles.buttonGenerate}`}
+                  }`}
                   role="button"
                   onClick={handleSvgSubmit}
                 >
@@ -365,12 +364,12 @@ export default function Page() {
                 </button>
                 <button
                   className={`${styles.buttonGenerate} ${
-                    loading && (!pdfGenerated || !pdfResult)
+                    pdfLoading && (!pdfGenerated || !taskPdfPath)
                       ? styles.buttonDisabled
                       : ""
-                  } ${colorScheme === "dark" ? styles.buttonGenerateDark : styles.buttonGenerate}`}
+                  }`}
+                  role="button"
                   onClick={handlePdfSubmit}
-                  disabled={pdfLoading}
                 >
                   {pdfLoading ? (
                     <span className={styles.loadingText}>generálás</span>
@@ -382,9 +381,7 @@ export default function Page() {
               {taskPdfPath && solutionPdfPath && (
                 <Group justify="center" align="center" mt="md">
                   <button
-                    className={`${styles.buttonGenerate} ${
-                      colorScheme === "dark" ? styles.buttonGenerateDark : ""
-                    }`}
+                    className={`${styles.buttonGenerate}`}
                     onClick={() => {
                       const downloadLink = document.createElement("a");
                       downloadLink.href = `${process.env.NEXT_PUBLIC_BACKEND}${taskPdfPath}`;
@@ -399,9 +396,7 @@ export default function Page() {
                   </button>
 
                   <button
-                    className={`${styles.buttonGenerate} ${
-                      colorScheme === "dark" ? styles.buttonGenerateDark : ""
-                    }`}
+                    className={`${styles.buttonGenerate}`}
                     onClick={() => {
                       const downloadLink = document.createElement("a");
                       downloadLink.href = `${process.env.NEXT_PUBLIC_BACKEND}${solutionPdfPath}`;
