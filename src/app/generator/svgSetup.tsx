@@ -63,7 +63,7 @@ export default function SvgSetup({
         description="Add meg a gráf csúcsainak számát"
         placeholder="Adj meg egy számot"
         min={2}
-        max={13}
+        max={15}
         withAsterisk
         {...form.getInputProps("graphNodes")}
         error={form.errors.graphNodes}
@@ -77,7 +77,7 @@ export default function SvgSetup({
         max={
           form.values.graphNodes
             ? (form.values.graphNodes * (form.values.graphNodes - 1)) / 2
-            : 12
+            : 14
         }
         withAsterisk
         {...form.getInputProps("graphEdges")}
