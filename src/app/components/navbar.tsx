@@ -57,7 +57,10 @@ export default function NavBar() {
                 radius="xs"
                 color={colorScheme === "dark" ? "white" : "black"}
                 onClick={() => router.push("/")}
-                style={{ fontWeight: 700 }}
+                style={{
+                  fontWeight: 700,
+                  color: colorScheme === "dark" ? "white" : "black",
+                }}
               >
                 GRÁF FELADAT GENERÁTOR
               </Button>

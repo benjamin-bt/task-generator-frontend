@@ -9,12 +9,12 @@
   cursor: pointer;
   border: 3px solid;
   padding: 0.25em 0.5em;
-  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px,
+    5px 5px 0px 0px;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  
 }
 
 .buttonMain:active {
@@ -41,18 +41,18 @@
   letter-spacing: 2px;
   text-decoration: none;
   text-transform: uppercase;
-  background-color: #f0f0f0;
+  background-color: #9c9c9c;
   color: #000;
-  min-width: 178.8px!important;
+  min-width: 178.8px !important;
   cursor: pointer;
   border: 3px solid;
   padding: 0.25em 0.5em;
-  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px,
+    5px 5px 0px 0px;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  
 }
 
 .buttonGenerateDark {
@@ -90,15 +90,15 @@
   cursor: pointer;
   border: 3px solid;
   padding: 0.25em 0.5em;
-  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px,
+    5px 5px 0px 0px;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  
 }
 
-.buttonDownloadDark{
+.buttonDownloadDark {
   background-color: #48642d;
   color: #000;
 }
@@ -133,12 +133,12 @@
   cursor: pointer;
   border: 3px solid;
   padding: 0.25em 0.5em;
-  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px,
+    5px 5px 0px 0px;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  
 }
 
 .buttonPrevStepDark {
@@ -176,12 +176,12 @@
   cursor: pointer;
   border: 3px solid;
   padding: 0.25em 0.5em;
-  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px, 5px 5px 0px 0px;
+  box-shadow: 1px 1px 0px 0px, 2px 2px 0px 0px, 3px 3px 0px 0px, 4px 4px 0px 0px,
+    5px 5px 0px 0px;
   position: relative;
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  
 }
 
 .buttonNextStepDark {
@@ -207,7 +207,7 @@
 }
 
 .buttonDisabled {
-  background-color: grey!important;
+  background-color: grey !important;
   color: black;
   cursor: not-allowed;
   pointer-events: none;
@@ -215,7 +215,7 @@
 }
 
 .buttonDisabledDark {
-  background-color: hsl(0, 0%, 51%)!important;
+  background-color: hsl(0, 0%, 51%) !important;
   color: white;
   cursor: not-allowed;
   pointer-events: none;
