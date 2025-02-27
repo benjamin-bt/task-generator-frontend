@@ -1,7 +1,7 @@
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css'
 
-import { ColorSchemeScript, MantineProvider, mantineHtmlProps, MantineColorsTuple, createTheme } from '@mantine/core';
+import { ColorSchemeScript, MantineProvider, mantineHtmlProps, MantineColorsTuple, createTheme, useMantineColorScheme } from '@mantine/core';
 import { use } from 'react';
 
 export const metadata = {

@@ -50,6 +50,10 @@ export default function Page() {
   const [pdfLoading, setPdfLoading] = useState(false);
   const [nodeListBack, setNodeListBack] = useState([]);
 
+  useEffect(() => {
+    console.log("Color scheme:", colorScheme);
+  }, [colorScheme]);
+
   const svgForm = useForm({
     initialValues: {
       graphType: "",
@@ -250,12 +254,11 @@ export default function Page() {
               />
               <Group justify="center" align="center">
                 <button
-                  className={`${styles.buttonGenerate} 
-                  ${
+                  className={`${styles.buttonGenerate} ${
                     loading && (!svgGenerated || !svgBlob)
                       ? styles.buttonDisabled
                       : ""
-                  } ${colorScheme === "dark" ? styles.buttonGenerateDark : ""}`}
+                  } ${colorScheme === "dark" ? styles.buttonGenerateDark : styles.buttonGenerate}`}
                   role="button"
                   onClick={handleSvgSubmit}
                 >
@@ -361,12 +364,11 @@ export default function Page() {
                   Vissza
                 </button>
                 <button
-                  className={`${styles.buttonGenerate} 
-                  ${
+                  className={`${styles.buttonGenerate} ${
                     loading && (!pdfGenerated || !pdfResult)
                       ? styles.buttonDisabled
                       : ""
-                  } ${colorScheme === "dark" ? styles.buttonGenerateDark : ""}`}
+                  } ${colorScheme === "dark" ? styles.buttonGenerateDark : styles.buttonGenerate}`}
                   onClick={handlePdfSubmit}
                   disabled={pdfLoading}
                 >
