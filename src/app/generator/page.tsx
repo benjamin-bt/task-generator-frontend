@@ -52,10 +52,6 @@ export default function Page() {
   const [svgError, setSvgError] = useState<string | null>(null);
   const [pdfError, setPdfError] = useState<string | null>(null);
 
-  useEffect(() => {
-    console.log("Color scheme:", colorScheme);
-  }, [colorScheme]);
-
   const svgForm = useForm({
     initialValues: {
       graphType: "",
@@ -149,8 +145,6 @@ export default function Page() {
         ...formData,
       };
 
-      console.log("Backend URL:", process.env.NEXT_PUBLIC_BACKEND);
-
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND}/api/generate-svg`,
@@ -170,8 +164,6 @@ export default function Page() {
         const nodeList = response.headers.get("X-Node-List");
 
         setNodeListBack(nodeList ? JSON.parse(nodeList) : []);
-        console.log("Node list:", nodeList);
-        console.log("Node list back:", nodeListBack);
         setFilename(filename);
         setSvgBlob(svgBlob);
         setSvgGenerated(true);

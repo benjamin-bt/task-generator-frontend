@@ -25,14 +25,12 @@ export default function MainPage() {
 
   useEffect(() => {
     fetch(
-      /* 'http://localhost:8000/api/message' */ `${process.env.NEXT_PUBLIC_BACKEND}/api/message`
+      `${process.env.NEXT_PUBLIC_BACKEND}/api/message`
     )
       .then((response) => response.json())
       .then((data) => setMessage(data.message))
       .catch((error) => console.error("Error:", error));
   }, []);
-
-  /* console.log(message); */
 
   return (
     <>
