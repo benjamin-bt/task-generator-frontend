@@ -138,6 +138,7 @@ export default function Page() {
   }, [activeStep, svgGenerated, svgBlob, colorScheme]);
 
   const handleSvgSubmit = async () => {
+    setSvgError(null);
     setLoading(true);
     svgForm.validate();
 
@@ -192,6 +193,7 @@ export default function Page() {
   };
 
   const handlePdfSubmit = async () => {
+    setPdfError(null);
     setTaskPdfPath(null);
     setSolutionPdfPath(null);
     setPdfLoading(true);
@@ -264,14 +266,32 @@ export default function Page() {
                 setSelectedTask={setSelectedTask}
               />
               <Group justify="center" align="center">
-                <Tooltip
-                  radius="xs"
-                  label={svgError || "SVG generálása"}
-                  position="bottom"
-                  offset={10}
-                  withArrow
-                  color={svgError ? "#c00000" : undefined}
-                >
+                {svgError ? (
+                  <Tooltip
+                    radius="xs"
+                    label={svgError || "SVG generálása"}
+                    position="bottom"
+                    offset={10}
+                    withArrow
+                    color={svgError ? "#c00000" : undefined}
+                  >
+                    <button
+                      className={`${styles.buttonGenerate} ${
+                        loading && (!svgGenerated || !svgBlob)
+                          ? styles.buttonDisabled
+                          : ""
+                      } ${svgError ? styles.buttonGenerateError : ""}`}
+                      role="button"
+                      onClick={handleSvgSubmit}
+                    >
+                      {loading ? (
+                        <span className={styles.loadingText}>generálás</span>
+                      ) : (
+                        "SVG generálása"
+                      )}
+                    </button>
+                  </Tooltip>
+                ) : (
                   <button
                     className={`${styles.buttonGenerate} ${
                       loading && (!svgGenerated || !svgBlob)
@@ -287,7 +307,7 @@ export default function Page() {
                       "SVG generálása"
                     )}
                   </button>
-                </Tooltip>
+                )}
                 <Tooltip
                   radius="xs"
                   label="SVG letöltése"
@@ -383,30 +403,48 @@ export default function Page() {
                 >
                   Vissza
                 </button>
-                <Tooltip
-                  radius="xs"
-                  label={pdfError || "PDF generálása"}
-                  position="bottom"
-                  offset={10}
-                  withArrow
-                  color={pdfError ? "#c00000" : undefined}
-                >
-                <button
-                  className={`${styles.buttonGenerate} ${
-                    pdfLoading && (!pdfGenerated || !taskPdfPath)
-                      ? styles.buttonDisabled
-                      : ""
-                  }`}
-                  role="button"
-                  onClick={handlePdfSubmit}
-                >
-                  {pdfLoading ? (
-                    <span className={styles.loadingText}>generálás</span>
-                  ) : (
-                    "PDF generálása"
-                  )}
-                </button>
-                </Tooltip>
+                {pdfError ? (
+                  <Tooltip
+                    radius="xs"
+                    label={pdfError || "PDF generálása"}
+                    position="bottom"
+                    offset={10}
+                    withArrow
+                    color={pdfError ? "#c00000" : undefined}
+                  >
+                    <button
+                      className={`${styles.buttonGenerate} ${
+                        pdfLoading && (!pdfGenerated || !taskPdfPath)
+                          ? styles.buttonDisabled
+                          : ""
+                      } ${pdfError ? styles.buttonGenerateError : ""}`}
+                      role="button"
+                      onClick={handlePdfSubmit}
+                    >
+                      {pdfLoading ? (
+                        <span className={styles.loadingText}>generálás</span>
+                      ) : (
+                        "PDF generálása"
+                      )}
+                    </button>
+                  </Tooltip>
+                ) : (
+                  <button
+                    className={`${styles.buttonGenerate} ${
+                      pdfLoading && (!pdfGenerated || !taskPdfPath)
+                        ? styles.buttonDisabled
+                        : ""
+                    }`}
+                    role="button"
+                    onClick={handlePdfSubmit}
+                  >
+                    {pdfLoading ? (
+                      <span className={styles.loadingText}>generálás</span>
+                    ) : (
+                      "PDF generálása"
+                    )}
+                  </button>
+                )}
               </Group>
               {taskPdfPath && solutionPdfPath && (
                 <Group justify="center" align="center" mt="md">
