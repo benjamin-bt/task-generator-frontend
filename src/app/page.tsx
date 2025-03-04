@@ -19,7 +19,7 @@ import NavBar from "./components/navbar";
 
 import styles from "./components/buttons.module.css";
 
-export default function About() {
+export default function MainPage() {
   const router = useRouter();
   const [message, setMessage] = useState("");
 

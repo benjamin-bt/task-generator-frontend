@@ -86,8 +86,9 @@ export default function SvgSetup({
       <Space h="md" />
       <Checkbox
         label="Körmentes gráf"
-        description="Jelöld be, ha az elkészítendő gráf körmentes (topologikus rendezést csak körmentes gráfokra lehet alkalmazni!)"
+        description="Irányított gráf esetén jelöld be, ha az elkészítendő gráf körmentes (topologikus rendezést csak körmentes gráfokra lehet alkalmazni!)"
         {...form.getInputProps("acyclicGraph")}
+        disabled={form.values.graphType === "irányítatlan" || !form.values.graphType}
       />
       <Space h="md" />
       <Divider />

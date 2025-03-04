@@ -55,6 +55,10 @@
   touch-action: manipulation;
 }
 
+.buttonGenerateError {
+  color: #c00000;
+}
+
 .buttonGenerateDark {
   background-color: #818181;
   color: #000;

@@ -49,6 +49,8 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [pdfLoading, setPdfLoading] = useState(false);
   const [nodeListBack, setNodeListBack] = useState([]);
+  const [svgError, setSvgError] = useState<string | null>(null);
+  const [pdfError, setPdfError] = useState<string | null>(null);
 
   useEffect(() => {
     console.log("Color scheme:", colorScheme);
@@ -81,7 +83,7 @@ export default function Page() {
       },
       acyclicGraph: (value, values) =>
         values.selectedTask === "topologikus rendezés" && !value
-          ? "Topologikus rendezéshez (irányított) aciklikus gráf szükséges!"
+          ? "Topologikus rendezéshez (irányított) körmentes gráf szükséges!"
           : null,
     },
   });
@@ -176,6 +178,11 @@ export default function Page() {
         setSolutionPdfPath(null);
       } catch (error) {
         console.error("Hiba az SVG generálása közben:", error);
+        if (error instanceof Error) {
+          setSvgError("Hibaüzenet: " + error.message);
+        } else {
+          setSvgError("Ismeretlen hiba történt.");
+        }
       } finally {
         setLoading(false);
       }
@@ -220,6 +227,11 @@ export default function Page() {
         setPdfGenerated(true);
       } catch (error) {
         console.error("Hiba a PDF generálása közben:", error);
+        if (error instanceof Error) {
+          setPdfError("Hibaüzenet: " + error.message);
+        } else {
+          setPdfError("Ismeretlen hiba történt.");
+        }
       } finally {
         setPdfLoading(false);
       }
@@ -252,21 +264,30 @@ export default function Page() {
                 setSelectedTask={setSelectedTask}
               />
               <Group justify="center" align="center">
-                <button
-                  className={`${styles.buttonGenerate} ${
-                    loading && (!svgGenerated || !svgBlob)
-                      ? styles.buttonDisabled
-                      : ""
-                  }`}
-                  role="button"
-                  onClick={handleSvgSubmit}
+                <Tooltip
+                  radius="xs"
+                  label={svgError || "SVG generálása"}
+                  position="bottom"
+                  offset={10}
+                  withArrow
+                  color={svgError ? "#c00000" : undefined}
                 >
-                  {loading ? (
-                    <span className={styles.loadingText}>generálás</span>
-                  ) : (
-                    "SVG generálása"
-                  )}
-                </button>
+                  <button
+                    className={`${styles.buttonGenerate} ${
+                      loading && (!svgGenerated || !svgBlob)
+                        ? styles.buttonDisabled
+                        : ""
+                    } ${svgError ? styles.buttonGenerateError : ""}`}
+                    role="button"
+                    onClick={handleSvgSubmit}
+                  >
+                    {loading ? (
+                      <span className={styles.loadingText}>generálás</span>
+                    ) : (
+                      "SVG generálása"
+                    )}
+                  </button>
+                </Tooltip>
                 <Tooltip
                   radius="xs"
                   label="SVG letöltése"
@@ -362,6 +383,14 @@ export default function Page() {
                 >
                   Vissza
                 </button>
+                <Tooltip
+                  radius="xs"
+                  label={pdfError || "PDF generálása"}
+                  position="bottom"
+                  offset={10}
+                  withArrow
+                  color={pdfError ? "#c00000" : undefined}
+                >
                 <button
                   className={`${styles.buttonGenerate} ${
                     pdfLoading && (!pdfGenerated || !taskPdfPath)
@@ -377,6 +406,7 @@ export default function Page() {
                     "PDF generálása"
                   )}
                 </button>
+                </Tooltip>
               </Group>
               {taskPdfPath && solutionPdfPath && (
                 <Group justify="center" align="center" mt="md">
