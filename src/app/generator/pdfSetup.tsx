@@ -1,8 +1,8 @@
-import { useState } from "react";
+/* import { useState } from "react"; */
 import {
   Checkbox,
   Divider,
-  Select,
+  /* Select, */
   Space,
   Textarea,
   TextInput,
@@ -12,7 +12,7 @@ import "dayjs/locale/hu";
 import { rem } from "@mantine/core";
 import { IconCalendar } from "@tabler/icons-react";
 
-type FormValues = {
+/* type FormValues = {
   generatePdf: boolean;
   graphType: string;
   graphNodes: number | null;
@@ -23,7 +23,7 @@ type FormValues = {
   taskText: string;
   dateChecked: boolean;
   date: Date | null;
-};
+}; */
 
 interface PdfProps {
   form: any;

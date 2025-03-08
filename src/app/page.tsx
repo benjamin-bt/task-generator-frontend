@@ -2,17 +2,12 @@
 
 import { useEffect, useState } from "react";
 import {
-  Button,
   Container,
   Group,
-  NumberInput,
   Paper,
-  Select,
   Space,
   Text,
   Title,
-  Tooltip,
-  useMantineColorScheme,
 } from "@mantine/core";
 import { useRouter } from "next/navigation";
 import NavBar from "./components/navbar";

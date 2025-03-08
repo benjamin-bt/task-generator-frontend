@@ -1,19 +1,19 @@
-import { useEffect, useState } from "react";
 import { Checkbox, Divider, NumberInput, Select, Space } from "@mantine/core";
 import "dayjs/locale/hu";
 
-type FormValues = {
+/* type FormValues = {
   graphType: string;
   graphNodes: number | null;
   graphEdges: number | null;
   acyclicGraph: boolean;
-};
+}; */
 
 interface SvgProps {
   form: any;
   selectedTask: string;
   setSelectedTask: React.Dispatch<React.SetStateAction<string>>;
 }
+
 
 export default function SvgSetup({
   form,

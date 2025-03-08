@@ -1,8 +1,7 @@
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css'
 
-import { ColorSchemeScript, MantineProvider, mantineHtmlProps, MantineColorsTuple, createTheme, useMantineColorScheme } from '@mantine/core';
-import { use } from 'react';
+import { ColorSchemeScript, MantineProvider, mantineHtmlProps } from '@mantine/core';
 
 export const metadata = {
   title: 'Gráf feladat generátor',

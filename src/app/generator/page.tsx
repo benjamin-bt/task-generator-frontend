@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 import {
-  Button,
   Container,
   Flex,
   Group,
@@ -11,7 +10,6 @@ import {
   Space,
   Stepper,
   Title,
-  Text,
   Tooltip,
   useMantineColorScheme,
 } from "@mantine/core";
@@ -25,7 +23,7 @@ import styles from "../components/buttons.module.css";
 
 require("dotenv").config();
 
-type FormValues = {
+/* type FormValues = {
   graphNodes: number | null;
   graphEdges: number | null;
   connectedGraph: boolean;
@@ -33,7 +31,7 @@ type FormValues = {
   taskText: string;
   dateChecked: boolean;
   date: Date | null;
-};
+}; */
 
 export default function Page() {
   const [selectedTask, setSelectedTask] = useState("");
@@ -52,6 +50,7 @@ export default function Page() {
   const [svgError, setSvgError] = useState<string | null>(null);
   const [pdfError, setPdfError] = useState<string | null>(null);
 
+  // Az SVG generálás formja és validációja
   const svgForm = useForm({
     initialValues: {
       graphType: "",
@@ -84,6 +83,7 @@ export default function Page() {
     },
   });
 
+// Az PDF generálás formja és validációja
   const pdfForm = useForm({
     initialValues: {
       generatePdf: false,
@@ -102,6 +102,7 @@ export default function Page() {
     },
   });
 
+  // Ha az SVG generálása sikeresen megtörtént, akkor a generált SVG-t megjelenítjük
   useEffect(() => {
     if (activeStep === 0 && svgGenerated && svgBlob) {
       const canvas = document.getElementById(
@@ -133,6 +134,7 @@ export default function Page() {
     }
   }, [activeStep, svgGenerated, svgBlob, colorScheme]);
 
+  // Az SVG generálás során a felhasználó által megadott adatok alapján SVG-t generálunk a backend segítségével
   const handleSvgSubmit = async () => {
     setSvgError(null);
     setLoading(true);
@@ -145,6 +147,7 @@ export default function Page() {
         ...formData,
       };
 
+      // A backend visszaküldi a generált SVG-t vagy a felmerült hibát
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND}/api/generate-svg`,
@@ -171,6 +174,7 @@ export default function Page() {
         setSolutionPdfPath(null);
       } catch (error) {
         console.error("Hiba az SVG generálása közben:", error);
+        // A hibaüzenetet megjelenítjük
         if (error instanceof Error) {
           setSvgError("Hibaüzenet: " + error.message);
         } else {
@@ -184,6 +188,7 @@ export default function Page() {
     }
   };
 
+  // Az PDF generálás során a felhasználó által megadott adatok alapján PDF-t generálunk a backend segítségével
   const handlePdfSubmit = async () => {
     setPdfError(null);
     setTaskPdfPath(null);
@@ -201,6 +206,7 @@ export default function Page() {
         svgFilename: filename,
       };
 
+      // A backend visszaküldi a generált PDF fájlokat vagy a felmerült hibát
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_BACKEND}/api/generate-pdf`,
@@ -221,6 +227,7 @@ export default function Page() {
         setPdfGenerated(true);
       } catch (error) {
         console.error("Hiba a PDF generálása közben:", error);
+        // A hibaüzenetet megjelenítjük
         if (error instanceof Error) {
           setPdfError("Hibaüzenet: " + error.message);
         } else {
@@ -258,6 +265,7 @@ export default function Page() {
                 setSelectedTask={setSelectedTask}
               />
               <Group justify="center" align="center">
+                {/* Hiba esetén a gomb színe megváltozik és az egeret felé mozgatva megjelenik a hibaüzenet */}
                 {svgError ? (
                   <Tooltip
                     radius="xs"
@@ -309,7 +317,7 @@ export default function Page() {
                 >
                   <button
                     className={`${styles.buttonDownload} ${
-                      !svgGenerated || !svgBlob ? styles.buttonDisabled : ""
+                      !svgGenerated || !svgBlob ? styles.buttonDisabled : "" // Ha nincs generált SVG, akkor a gomb inaktív
                     } ${
                       colorScheme === "dark" ? styles.buttonDownloadDark : ""
                     } `}
@@ -330,7 +338,7 @@ export default function Page() {
                 </Tooltip>
                 <button
                   className={`${styles.buttonNextStep} ${
-                    !svgGenerated ? styles.buttonDisabled : ""
+                    !svgGenerated ? styles.buttonDisabled : "" // Ha nincs generált SVG, akkor a gomb inaktív
                   } ${colorScheme === "dark" ? styles.buttonNextStepDark : ""}`}
                   style={{ width: "178.8px" }}
                   onClick={() => setActiveStep(activeStep + 1)}
@@ -349,6 +357,7 @@ export default function Page() {
                 }}
               >
                 <Space h="sm" />
+                {/* Ha sikeres az SVG generálás, akkor az SVG képe megjelenik */}
                 {svgGenerated && (
                   <div
                     id="svgContainer"
@@ -395,10 +404,11 @@ export default function Page() {
                 >
                   Vissza
                 </button>
+                {/* Hiba esetén a gomb színe megváltozik és az egeret felé mozgatva megjelenik a hibaüzenet */}
                 {pdfError ? (
                   <Tooltip
                     radius="xs"
-                    label={pdfError || "PDF generálása"}
+                    label={pdfError}
                     position="bottom"
                     offset={10}
                     withArrow
@@ -438,6 +448,7 @@ export default function Page() {
                   </button>
                 )}
               </Group>
+              {/* A PDF letöltésére szolgáló gomb csak akkor jelenik meg, ha a PDF generálás sikeres volt */}
               {taskPdfPath && solutionPdfPath && (
                 <Group justify="center" align="center" mt="md">
                   <button
