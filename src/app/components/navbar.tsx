@@ -117,7 +117,10 @@ export default function NavBar() {
         </Group>
 
         {opened && (
+          <>
+          <Divider style={{ margin: "10px 0" }} />
           <Group>
+
             <Button
               className={styles.button}
               variant="subtle"
@@ -137,6 +140,7 @@ export default function NavBar() {
               RÓLAM
             </Button> */}
           </Group>
+          </>
         )}
         <Divider style={{ margin: "10px 0" }} />
       </Container>

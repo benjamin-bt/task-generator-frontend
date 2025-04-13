@@ -46,24 +46,20 @@ export default function MainPage() {
           </Text>
           <Space h="sm" />
           <Text>
-            A feladatgenerátor jelenleg három típusú feladat létrehozását
-            támogatja: mélységi bejárás, szélességi bejárás és topologikus
-            rendezés. A generált feladatok és megoldásaik PDF formátumban
-            külön-külön letölthetők, így a tanulók önállóan is ellenőrizhetik
-            megoldásaikat, míg a tanárok könnyedén előkészíthetik az órákhoz
-            szükséges anyagokat.
-          </Text>
-          <Space h="sm" />
-          <Text>
             A generátor számos testreszabási lehetőséget kínál, hogy a feladatok
             megfeleljenek a különböző tanítási és tanulási igényeknek. Megadható
             például a gráf típusa, csúcsainak és éleinek száma és a feladathoz
             tartozó szöveges instrukciók is. Ez a rugalmasság biztosítja, hogy a
             feladatok mindig az adott tanulócsoport szintjéhez és céljaihoz
-            igazíthatók legyenek. Próbáld ki a generátort, és fedezd fel, hogyan
-            könnyítheti meg a gráfelméleti feladatok tanítását és gyakorlását!
+            igazíthatók legyenek.
           </Text>
-
+          <Space h="sm" />
+          <Text>
+            A generált feladatok és megoldásaik PDF formátumban
+            külön-külön letölthetők, megkönnyítve a feladatlapok nyomtatását. 
+            Szükség esetén a gráf ábrázolása SVG formátumban is letölthető, amely
+            lehetővé teszi a gráfok további feldolgozását saját igények szerint.
+          </Text>
           <Space h="lg" />
           <Group justify="center" align="center">
             <button
